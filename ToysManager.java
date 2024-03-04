@@ -64,4 +64,17 @@ public class ToysManager {
             e.printStackTrace();
         }
     }
+
+    public static List<Toys> getAllToys() {
+        List<Toys> toysList = new ArrayList<>();
+        List<String> lines = readLinesFromFile();
+
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            Toys toy = new Toys(parts[0], parts[1], Integer.parseInt(parts[2]), Float.parseFloat(parts[3]));
+            toysList.add(toy);
+        }
+
+        return toysList;
+    }
 }

@@ -8,6 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         addToy();
+        System.out.println(ToysManager.getAllToys());
     }
 
     public static void addToy(){
