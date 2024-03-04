@@ -1,12 +1,11 @@
 public class Toys {
-    private static int nextId = 100001;
     protected String id;
     protected String name;
     protected int balance;
     protected float chance;
 
-    public Toys(String name, int balance, float chance) {
-        this.id = generateUniqueId();
+    public Toys(String id, String name, int balance, float chance) {
+        this.id = id;
         this.name = name;
         this.balance = balance;
         this.chance = chance;
@@ -40,12 +39,8 @@ public class Toys {
         this.chance = chance;
     }
 
-    private String generateUniqueId() {
-        return String.valueOf(nextId++);
-    }
-
     @Override
     public String toString(){
-        return ("id: " + id + "; name: " + name + "; balance: " + balance + "; chance: " + chance);
+        return (id + "," + name + "," + balance + "," + chance);
     }
 }
