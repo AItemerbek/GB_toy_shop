@@ -7,7 +7,14 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        addToy();
+//        addToy();
+//        addToy();
+//        addToy();
+        System.out.println(ToysManager.getAllToys());
+        ToysManager.chooseRandomToy();
+        System.out.println(ToysManager.getAllToys());
+        System.out.println(ToysManager.getAllToys());
+        ToysManager.chooseRandomToy();
         System.out.println(ToysManager.getAllToys());
     }
 

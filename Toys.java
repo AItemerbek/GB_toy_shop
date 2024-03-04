@@ -45,6 +45,6 @@ public class Toys {
 
     @Override
     public String toString(){
-        return (id + "," + name + "," + balance + "," + chance);
+        return (id + ", " + name + ", " + balance + ", " + chance);
     }
 }
