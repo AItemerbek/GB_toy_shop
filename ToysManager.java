@@ -1,15 +1,13 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class ToysManager {
+    static Scanner scanner = new Scanner(System.in);
     private static final String FILE_PATH = "toys.txt";
     private static final String WINNING_TOY_FILE_PATH = "wining_toys.txt";
 
     static Queue<String> winningToysQueue = new LinkedList<>();
+
 
     public static void createToy(String name, int balance, float chance) {
         File file = new File(FILE_PATH);
@@ -34,6 +32,37 @@ public class ToysManager {
         writeLinesToFile(lines);
     }
 
+    public static void addToy() {
+        int balance;
+        float chance;
+        System.out.print("Введите имя игрушки: ");
+        String name = scanner.nextLine();
+        while (true) {
+            System.out.print("Введите количество игрушек, шт.: ");
+            try {
+                balance = Integer.parseInt(scanner.nextLine());
+                if (balance > 0) break;
+                else {
+                    System.out.println("Количество игрушек не может быть меньше 1");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Неверный формат ввода данных");
+            }
+        }
+        while (true) {
+            System.out.print("Введите шанс выпадения игрушки, %: ");
+            try {
+                chance = Float.parseFloat(scanner.nextLine());
+                if (chance >= 0.1 && chance <= 99.9) break;
+                else {
+                    System.out.println("Шанс выпадения не может быть меньше 0,1 % или больше 99,9%");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Неверный формат ввода данных");
+            }
+        }
+        ToysManager.createToy(name, balance, chance);
+    }
 
     public static List<Toys> getAllToys() {
         List<Toys> toysList = new ArrayList<>();
@@ -101,7 +130,8 @@ public class ToysManager {
                 lines.add(line);
             }
         } catch (IOException e) {
-            System.out.println("База игрушек пуста. Наполните базу, чтобы перейти к розыгрышу");;
+            System.out.println("База игрушек пуста. Наполните базу, чтобы перейти к розыгрышу");
+            ;
         }
         return lines;
     }
@@ -167,5 +197,24 @@ public class ToysManager {
 
         writeLinesToFile(lines);
         System.out.println("Шанс для игрушки с ID " + id + " успешно обновлен.");
+    }
+
+    public static void addNewChance() {
+        System.out.print("Введите ID игрушки, шанс выпадения которой Вы хотите изменить: ");
+        String id = scanner.nextLine();
+        float chance;
+        while (true) {
+            System.out.print("Введите шанс выпадения игрушки, %: ");
+            try {
+                chance = Float.parseFloat(scanner.nextLine());
+                if (chance >= 0.1 && chance <= 99.9) break;
+                else {
+                    System.out.println("Шанс выпадения не может быть меньше 0,1 % или больше 99,9%");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Неверный формат ввода данных");
+            }
+        }
+        ToysManager.updateToyChance(id, chance);
     }
 }
