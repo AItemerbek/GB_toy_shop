@@ -101,7 +101,7 @@ public class ToysManager {
                 lines.add(line);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("База игрушек пуста. Наполните базу, чтобы перейти к розыгрышу");;
         }
         return lines;
     }
