@@ -2,17 +2,21 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class ToysManager {
     private static final String FILE_PATH = "toys.txt";
-    private static final String RANDOM_TOY_FILE_PATH = "random_toy.txt";
+    private static final String WINNING_TOY_FILE_PATH = "wining_toys.txt";
+
+    private static final Queue<String> winningToysQueue = new LinkedList<>();
 
     public static void createToy(String name, int balance, float chance) {
         File file = new File(FILE_PATH);
         if (!file.exists()) {
             try {
                 file.createNewFile();
-                writeLineToFile("100001," + name + "," + balance + "," + chance, FILE_PATH);
+                writeLineToFile("100001," + name + "," + balance + "," + chance);
                 return;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -43,11 +47,11 @@ public class ToysManager {
         return toysList;
     }
 
-    public static void chooseRandomToy() {
+    public static String chooseRandomToy() {
         List<Toys> toysList = getAllToys();
         if (toysList.isEmpty()) {
             System.out.println("Список игрушек пуст.");
-            return;
+            return null;
         }
 
         float totalChance = 0;
@@ -66,20 +70,29 @@ public class ToysManager {
                 if (toy.getBalance() <= 0) {
                     toysList.remove(toy);
                 }
-
                 updateToFile(toysList);
-                appendNameToFile(toy.getName());
-                return;
+                String winningToyName = toy.getName();
+                winningToysQueue.offer(winningToyName);
+                System.out.printf("Поздравляем! Вы выиграли %s ", winningToyName);
+                return winningToyName;
             }
         }
+        return null;
     }
 
-    private static void appendNameToFile(String name) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(RANDOM_TOY_FILE_PATH, true))) {
-            bw.write(name);
-            bw.write(",");
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static String getWinningToy() {
+        return winningToysQueue.peek();
+    }
+
+    public static void moveLastWinningToyToFile() {
+        String lastWinningToy = winningToysQueue.poll();
+        if (lastWinningToy != null) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(WINNING_TOY_FILE_PATH, true))) {
+                bw.write(lastWinningToy);
+                bw.write(",");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -106,8 +119,8 @@ public class ToysManager {
         }
     }
 
-    private static void writeLineToFile(String line, String filePath) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+    private static void writeLineToFile(String line) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ToysManager.FILE_PATH))) {
             bw.write(line);
             bw.newLine();
         } catch (IOException e) {
