@@ -9,7 +9,7 @@ public class ToysManager {
     private static final String FILE_PATH = "toys.txt";
     private static final String WINNING_TOY_FILE_PATH = "wining_toys.txt";
 
-    private static final Queue<String> winningToysQueue = new LinkedList<>();
+    static Queue<String> winningToysQueue = new LinkedList<>();
 
     public static void createToy(String name, int balance, float chance) {
         File file = new File(FILE_PATH);
@@ -34,6 +34,7 @@ public class ToysManager {
         writeLinesToFile(lines);
     }
 
+
     public static List<Toys> getAllToys() {
         List<Toys> toysList = new ArrayList<>();
         List<String> lines = readLinesFromFile();
@@ -47,11 +48,11 @@ public class ToysManager {
         return toysList;
     }
 
-    public static String chooseRandomToy() {
+    public static void chooseRandomToy() {
         List<Toys> toysList = getAllToys();
         if (toysList.isEmpty()) {
             System.out.println("Список игрушек пуст.");
-            return null;
+            return;
         }
 
         float totalChance = 0;
@@ -73,19 +74,15 @@ public class ToysManager {
                 updateToFile(toysList);
                 String winningToyName = toy.getName();
                 winningToysQueue.offer(winningToyName);
-                System.out.printf("Поздравляем! Вы выиграли %s ", winningToyName);
-                return winningToyName;
+                System.out.printf("Поздравляем! Вы выиграли %s \n", winningToyName);
+                return;
             }
         }
-        return null;
-    }
-
-    public static String getWinningToy() {
-        return winningToysQueue.peek();
     }
 
     public static void moveLastWinningToyToFile() {
         String lastWinningToy = winningToysQueue.poll();
+        System.out.printf("Вы получили %s  \n", lastWinningToy);
         if (lastWinningToy != null) {
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(WINNING_TOY_FILE_PATH, true))) {
                 bw.write(lastWinningToy);
@@ -146,5 +143,29 @@ public class ToysManager {
             lines.add(toyInfo);
         }
         writeLinesToFile(lines);
+    }
+
+    public static void updateToyChance(String id, float newChance) {
+        List<String> lines = readLinesFromFile();
+        boolean found = false;
+
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            String[] parts = line.split(",");
+            if (parts.length >= 4 && parts[0].equals(id)) {
+                parts[3] = String.valueOf(newChance);
+                lines.set(i, String.join(",", parts));
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Игрушка с указанным ID не найдена.");
+            return;
+        }
+
+        writeLinesToFile(lines);
+        System.out.println("Шанс для игрушки с ID " + id + " успешно обновлен.");
     }
 }

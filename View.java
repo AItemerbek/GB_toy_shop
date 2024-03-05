@@ -16,6 +16,17 @@ public class View {
         System.out.println("3 - Добавить игрушку");
         System.out.println("4 - Запустить розыгрыш");
         System.out.println("5 - Получить приз");
+        System.out.println("6 - Показать очередь выигранных призов");
+        System.out.println("7 - Изменить шанс выпадения игрушки");
         System.out.println("0 - выход");
+    }
+
+    public static void showWiningToys(){
+        if (ToysManager.winningToysQueue.isEmpty() ) {
+            System.out.println("Список выигранных игрушек пуст. Запустите розыгрыш чтобы его наполнить");
+        }
+        for (String s : ToysManager.winningToysQueue) {
+            System.out.println(s);
+        }
     }
 }
